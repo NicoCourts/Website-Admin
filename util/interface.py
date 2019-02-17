@@ -38,20 +38,30 @@ class APICaller:
         res = r.post(self.url + path, signed_obj)
         return res.json()
 
+    def upload_img(self, filename):
+        """Upload an image to the API"""
+        with open(filename, 'rb') as f:
+            img = f.read()
+
+        signed_obj = self.sign_obj(None)
+
+        # Make the request
+        payload = {"Nonce":signed_obj['Nonce'], "Sig":signed_obj["Sig"]}
+        files = {"file": img}
+        res = r.post(self.url + "upload/", data=payload, files=files)
+        return res.json()
+
     def sign_obj(self, obj):
-        """Sign the object (with a nonce) and return a bytearray for the query"""
+        """Sign the object (with a nonce) and return a bytearray for the query
+        
+            Optional argument 'binary' allows the user to denote that the element
+            is not a JSON object requiring encoding."""
         nonce = self.get_nonce()
         json_obj = json.dumps(obj).encode('utf-8')
         sig = self.crypto.sign_blob(nonce + json_obj)
 
-        signed_obj = {"Payload":obj,
+        signed_obj = {"Payload":json_obj,
                       "Nonce": str(b64.standard_b64encode(nonce), 'utf-8'),
                       "Sig":sig}
 
         return signed_obj
-
-    def upload_img(self, filename):
-        """Upload an image to the API"""
-        with open(filename, 'rb') as f:
-            thing = bson.dumps({'img':f.read()})
-        print(bson.loads(thing))

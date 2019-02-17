@@ -1,5 +1,4 @@
 import gi
-from API.interface import APICaller
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 

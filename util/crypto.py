@@ -1,4 +1,4 @@
-"""Handle all the signing/hashing we need"""
+"""Handle all the signing/hashing needed for authenticating to the API"""
 import base64 as b64
 import rsa
 
@@ -19,5 +19,7 @@ class Crypto:
         Returns:
             A hex-encoded string representation of the signature.
         """
-        sig = rsa.sign(blob, self.privkey, 'SHA-512')
+        blobhash = rsa.compute_hash(blob, 'SHA-512')
+        print(blobhash.hex())
+        sig = rsa.sign_hash(blobhash, self.privkey, 'SHA-512')
         return str(b64.standard_b64encode(sig), 'utf-8')
