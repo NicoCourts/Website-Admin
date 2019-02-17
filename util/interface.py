@@ -1,8 +1,8 @@
 """Provides an interface for the NicoCourts.com API"""
 import base64 as b64
 import json
-import bson
 import requests as r
+import requests_toolbelt as tb
 from .crypto import Crypto
 
 
@@ -21,22 +21,35 @@ class APICaller:
 
     def get_image_list(self):
         """Fetch and return a JSON object full of image metadata"""
-        params = self.sign_obj({})
-        res = r.get(self.url + "images/", params).read().decode("utf-8")
-        return res.json()
+        res = r.get(self.url + "images/")
+        try:
+            response = res.json()
+        except ValueError:
+            response = res.status
+
+        return  response
 
     def get_posts(self):
         """Fetch a JSON object containing the current posts"""
-        res = r.get(self.url + "posts/all/")
-        return res.json()
+        return self.post_object(None, path="posts/all/")
+    
+    def create_post(self, post):
+        """Create a new post"""
+        return self.post_object(post, path="post/")
 
     def post_object(self, obj, path=""):
         """Creates a POST request to the API with the provided JSON object.
 
         Client can include an (optional) an API route to post to."""
         signed_obj = self.sign_obj(obj)
-        res = r.post(self.url + path, signed_obj)
-        return res.json()
+        res = r.post(self.url + path, json=signed_obj)
+
+        try:
+            response = res.json()
+        except ValueError:
+            response = res.status
+
+        return  response
 
     def upload_img(self, filename):
         """Upload an image to the API"""
@@ -46,22 +59,32 @@ class APICaller:
         signed_obj = self.sign_obj(None)
 
         # Make the request
-        payload = {"Nonce":signed_obj['Nonce'], "Sig":signed_obj["Sig"]}
-        files = {"file": img}
-        res = r.post(self.url + "upload/", data=payload, files=files)
-        return res.json()
+        mpf = tb.multipart.MultipartEncoder(fields = {
+            "Nonce":signed_obj['Nonce'], "Sig":signed_obj["Sig"], "Filename":filename,
+            "img": open(filename, 'rb')
+        })
+
+        res = r.post(self.url + "upload/", data=mpf, headers={"Content-Type":mpf.content_type})
+
+        try:
+            response = res.json()
+        except ValueError:
+            response = res.status
+
+        return  response
 
     def sign_obj(self, obj):
-        """Sign the object (with a nonce) and return a bytearray for the query
-        
-            Optional argument 'binary' allows the user to denote that the element
-            is not a JSON object requiring encoding."""
+        """Sign the object (with a nonce) and return a bytearray for the query"""
         nonce = self.get_nonce()
-        json_obj = json.dumps(obj).encode('utf-8')
-        sig = self.crypto.sign_blob(nonce + json_obj)
+        if obj is None:
+            sig = self.crypto.sign_blob(nonce)
+            json_obj = json.dumps([]).encode('utf-8')
+        else:
+            json_obj = json.dumps(obj).encode('utf-8')
+            sig = self.crypto.sign_blob(nonce + json_obj)
 
-        signed_obj = {"Payload":json_obj,
+        signed_obj = {"Payload": b64.standard_b64encode(json_obj),
                       "Nonce": str(b64.standard_b64encode(nonce), 'utf-8'),
-                      "Sig":sig}
+                      "Sig": sig}
 
         return signed_obj
