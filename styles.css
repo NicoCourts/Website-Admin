@@ -1,0 +1,152 @@
+@font-face{
+	font-family: CMRoman;
+	src: url("https://nicocourts.com/assets/CMUSerif-Roman.woff") format("woff");
+}
+div#content-wrapper{
+	padding: 0px;
+	border-radius:2px;
+	max-width:900px;
+	width: 95%;
+	margin-left:auto;
+	margin-right:auto;
+	border-style:solid;
+	border-width:2px;
+}
+div#content{
+	font-family: "CMRoman";
+	font-size: 14pt;
+	box-sizing: border-box;
+	display:inline-block;
+	width: 100%;
+	background-color: white;
+	padding: 0px;
+}
+div#header{
+	font-family: "CMRoman";
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing:border-box;
+	width: 100%;
+	background-color:#FFC36F;
+	padding: 10px;
+}
+h2{
+	margin: 0;
+}
+div.stack{
+	float: left;
+	width:50%;
+}
+div.stack-right{
+	float: left;
+	width:50%;
+	text-align: right;
+	font-style: italic;
+}
+a:link{
+	color: #CC3F13;
+	text-decoration: none;
+}
+a:visited{
+	color: #CC3F13;
+}
+a:hover{
+	color: #136BCC;
+}
+
+div.postBox{
+	margin: 10px 0;
+	padding: 10px;
+	text-align: left;
+}
+
+div.postBox-short{
+	margin: 10px 0;
+	padding: 10px;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+div.postFoot{
+	color: #999999;
+	font-size: 9pt;
+	text-align: right;
+	width: 100%;
+}
+
+h3.postTitle{
+	font-size: 15pt;
+	font-variant: small-caps;
+	margin: 0;
+}
+
+div.postBody{
+	border-style: solid;
+	border-color: #888888;
+	border-width: 1px;
+	padding: 4px 12px;
+	max-height: 110px;
+	overflow: hidden;
+	-moz-box-shadow: inset  0 -35px 40px -35px #000000;
+	-webkit-box-shadow: inset  0 -35px 40px -35px #000000;
+	box-shadow: inset  0 -35px 40px -35px #000;
+}
+
+div.postBody p{
+	margin: 0 0 12px 0;
+}
+
+div.postBody-short{
+	text-align:center;
+	font-size: 18pt;
+	padding: 5px 50px;
+	background-color: #ffd8aa;
+	color: #301a00;
+	max-width: 30%;
+	display: inline-flex;
+	border-radius: 5px;
+}
+
+div.readMore{
+	z-index: 2;
+	position: relative;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	top: 0;
+	background-image:  rgba(255,255,255,1);
+}
+
+div#postWrapper{
+	padding: 20px;
+}
+
+div#postWrapper h1{
+	font-variant: small-caps;
+	font-weight: normal;
+	margin: 0;
+}
+
+div#dateSpan{
+	margin: 0;
+	font-size: 11pt;
+	color: #666666;
+}
+
+div.flexbox{
+	display:flex;
+	flex-direction:row;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+div.codehilite {
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    font-size: 12pt;
+    overflow-x: scroll;
+}
