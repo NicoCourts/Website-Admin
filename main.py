@@ -11,7 +11,6 @@ class UI:
         self.window.connect("destroy", Gtk.main_quit)
         self.run()
 
-
     def run(self):
         self.window.show_all()
         Gtk.main()
@@ -34,8 +33,8 @@ class MainWindow(Gtk.Window):
         self.create_textview()
     
     def create_textview(self):
-        self.notebook = Gtk.Paned.new(Gtk.Orientation.VERTICAL)
-        self.grid.attach(self.notebook, 0, 1, 3, 1)
+        self.paned = Gtk.Paned.new(Gtk.Orientation.VERTICAL)
+        self.grid.attach(self.paned, 0, 1, 3, 1)
 
         self.textview = Gtk.TextView()
         self.textview.set_top_margin(10)
@@ -61,17 +60,17 @@ class MainWindow(Gtk.Window):
         self.win.set_size_request(900, 450)
         self.win.add(self.textview)
 
-        self.notebook.add1(self.win)
+        self.paned.add1(self.win)
 
         self.wk = WebKit2.WebView.new_with_user_content_manager(self.ucm)
-        self.notebook.add2(self.wk)
+        self.paned.add2(self.wk)
         self.update_html()
 
-        self.textview.connect('key-release-event', self.inform)
+        self.textview.connect('key-release-event', self.on_key_release)
         self.textview.connect('focus-in-event', self.on_in_focus)
         self.textview.connect('focus-out-event', self.on_out_focus)
 
-    def inform(self, widget, event):
+    def on_key_release(self, widget, event):
         self.update_html()
 
     def on_out_focus(self, event, what):
@@ -116,8 +115,6 @@ class PostEditor(Gtk.Grid):
         self.tabs.show_all()
         self.add(self.navbar)
         self.add(self.tabs)
-
-    
 
 config = {'title': 'Test program ...'}
 x = UI(config)

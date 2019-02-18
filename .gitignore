@@ -1,5 +1,8 @@
 private.pem
 .vscode/
+*.svg
+*.jpg
+*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
