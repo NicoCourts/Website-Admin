@@ -5,7 +5,6 @@ import requests as r
 import requests_toolbelt as tb
 from .crypto import Crypto
 
-
 class APICaller:
     """Provides an interface one can use to interact with the API"""
 
@@ -27,11 +26,21 @@ class APICaller:
         except ValueError:
             response = res.status
 
-        return  response
+        return response
 
     def get_posts(self):
         """Fetch a JSON object containing the current posts"""
-        return self.post_object(None, path="posts/all/")
+        res = r.get(self.url + "posts")
+
+        try:
+            response = res.json()
+        except ValueError:
+            response = res.status
+
+        return  response
+
+        #This is how I'll do it once I get auth set up
+        #return self.post_object(None, path="posts/all/")
     
     def create_post(self, post):
         """Create a new post"""
@@ -53,8 +62,8 @@ class APICaller:
 
     def upload_img(self, filename):
         """Upload an image to the API"""
-        with open(filename, 'rb') as f:
-            img = f.read()
+        #with open(filename, 'rb') as f:
+        #    img = f.read()
 
         signed_obj = self.sign_obj(None)
 

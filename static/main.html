@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+
+<style>
+
+</style>
+</head>
+<body>
+
+
+<h1>JS API Example</h1>
+<button onClick="goTo('post_admin')">View Posts</button>
+<button onClick="test()">Do some funky shit.</button>
+
+<div id="response-container"></div>
+<script>
+function showResponse(response) {
+    var container = document.getElementById('response-container')
+
+    container.innerText = response.message
+    container.style.display = 'block'
+}
+
+function goTo(target) {
+    pywebview.api.goTo(target)
+}
+function test() {
+    pywebview.api.testing()
+}
+
+</script>
+</body>
+</html>
