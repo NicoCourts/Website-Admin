@@ -2,19 +2,19 @@
 <html>
 <head lang="en">
 <meta charset="UTF-8">
-
-<style>
-
-</style>
+<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 </head>
 <body>
 
 
-<h1>JS API Example</h1>
-<button onClick="goTo('post_admin')">View Posts</button>
-<button onClick="test()">Do some funky shit.</button>
+<div id='buttons'>
+    <center>
+        <h2>Blog Administration</h2>
+        <button onClick="go_to('index')">View Posts</button><br />
+        <button onClick="test()">Do some funky shit.</button>
+    </center>
+</div>
 
-<div id="response-container"></div>
 <script>
 function showResponse(response) {
     var container = document.getElementById('response-container')
@@ -23,11 +23,11 @@ function showResponse(response) {
     container.style.display = 'block'
 }
 
-function goTo(target) {
-    pywebview.api.goTo(target)
+function go_to(target) {
+    pywebview.api.go_to(target);
 }
 function test() {
-    pywebview.api.testing()
+    pywebview.api.test();
 }
 
 </script>

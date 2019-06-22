@@ -9,11 +9,11 @@ class Crypto:
         with open("private.pem", 'rb') as fil:
             keydata = fil.read()
             self.privkey = rsa.PrivateKey.load_pkcs1(keydata)
-   
+
     def sign_blob(self, blob):
         """
         Take in a (binary) blob and sign it. Let the user handle the API call for the nonce.
-        
+
         Parameters:
             blob: A binary blob that is to be signed.
         Returns:

@@ -150,3 +150,14 @@ div.codehilite {
     font-size: 12pt;
     overflow-x: scroll;
 }
+
+div.buttons{
+	left: auto;
+	right: auto;
+	top: auto;
+	bottom: auto;
+}
+button {
+	font-size: 16pt;
+	padding: 20px;
+}

@@ -30,6 +30,8 @@ class APICaller:
 
     def get_posts(self):
         """Fetch a JSON object containing the current posts"""
+        #This is how I'll do it once I get auth set up
+        #res = self.post_object(None, path="posts/all/")
         res = r.get(self.url + "posts")
 
         try:
@@ -37,10 +39,7 @@ class APICaller:
         except ValueError:
             response = res.status
 
-        return  response
-
-        #This is how I'll do it once I get auth set up
-        #return self.post_object(None, path="posts/all/")
+        return response
     
     def create_post(self, post):
         """Create a new post"""
