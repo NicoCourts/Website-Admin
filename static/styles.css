@@ -2,6 +2,9 @@
 	font-family: CMRoman;
 	src: url("https://nicocourts.com/assets/CMUSerif-Roman.woff") format("woff");
 }
+body {
+	background-image:url(what-the-hex.png);
+}
 div#content-wrapper{
 	padding: 0px;
 	border-radius:2px;
@@ -11,7 +14,7 @@ div#content-wrapper{
 	margin-right:auto;
 	border-style:solid;
 	border-width:2px;
-}
+} 
 div#content{
 	font-family: "CMRoman";
 	font-size: 14pt;
@@ -156,8 +159,29 @@ div.buttons{
 	right: auto;
 	top: auto;
 	bottom: auto;
+	margin-top: 30px;
 }
 button {
 	font-size: 16pt;
 	padding: 20px;
+}
+div.clickable {
+	font: Arial;
+	font-size: 20pt;
+	color: white;
+	width: 40%;
+	height: 75px;
+	background-color: #4115a8;
+	padding: 20px;
+}
+div.clickInner {
+	background-color: #8456f0;
+	padding-top: 22px;
+	padding-bottom: 22px;
+	box-shadow: #000 3px 3px;
+	cursor: pointer;
+}
+div.align {
+	display: block;
+	float: right;
 }

@@ -6,7 +6,7 @@ class Crypto:
     """Manages the cryptographic aspects of the project"""
     def __init__(self):
         # Read in private key file
-        with open("private.pem", 'rb') as fil:
+        with open("/etc/pki/privkey.pem", 'rb') as fil:
             keydata = fil.read()
             self.privkey = rsa.PrivateKey.load_pkcs1(keydata)
 

@@ -5,29 +5,26 @@
 <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 </head>
 <body>
-
+<div class='align' onClick="close()"><span>Close</span></div>
 
 <div id='buttons'>
     <center>
         <h2>Blog Administration</h2>
-        <button onClick="go_to('index')">View Posts</button><br />
-        <button onClick="test()">Do some funky shit.</button>
+        <div onClick="print()" class='clickable'>
+            <div class="clickInner">View Posts</div>
+        </div><br />
+        <div onClick="end()" class='clickable'>
+            <div class="clickInner">Shut it all down.</div>
+        </div>
     </center>
 </div>
 
 <script>
-function showResponse(response) {
-    var container = document.getElementById('response-container')
-
-    container.innerText = response.message
-    container.style.display = 'block'
+function end() {
+    pywebview.api.close_program();
 }
-
-function go_to(target) {
-    pywebview.api.go_to(target);
-}
-function test() {
-    pywebview.api.test();
+function print() {
+    pywebview.api.print();
 }
 
 </script>
