@@ -5,28 +5,28 @@
 <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 </head>
 <body>
-<div class='align' onClick="close()"><span>Close</span></div>
-
-<div id='buttons'>
-    <center>
-        <h2>Blog Administration</h2>
-        <div onClick="print()" class='clickable'>
-            <div class="clickInner">View Posts</div>
-        </div><br />
-        <div onClick="end()" class='clickable'>
-            <div class="clickInner">Shut it all down.</div>
+    <div id="content">
+        <div onClick="end()" id="close"><span class="hover">Close</span></div>
+        <div id='buttons'>
+            <center>
+                <h2>Blog Administration</h2>
+                <div onClick="print()" class='clickable'>
+                    <div class="clickInner">View Posts</div>
+                </div><br />
+                <div onClick="get_posts()" class='clickable'>
+                    <div class="clickInner">get posts</div>
+                </div>
+            </center>
         </div>
-    </center>
-</div>
+    </div>
 
-<script>
-function end() {
-    pywebview.api.close_program();
-}
-function print() {
-    pywebview.api.print();
-}
-
-</script>
+    <script>
+    function end() {
+        pywebview.api.close_program();
+    }
+    function get_posts() {
+        pywebview.api.get_posts();
+    }
+    </script>
 </body>
 </html>

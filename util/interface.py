@@ -28,18 +28,26 @@ class APICaller:
 
         return response
 
-    def get_posts(self):
+    def get_posts(self, path="posts/all/"):
         """Fetch a JSON object containing the current posts"""
         #This is how I'll do it once I get auth set up
         #res = self.post_object(None, path="posts/all/")
-        res = r.get(self.url + "posts")
+        param = {}
+        nonce = self.get_nonce()
+        param['Payload'] = ''
+        param['Nonce'] = b64.b64encode(nonce).decode('ASCII')
+        param['Sig'] = self.crypto.sign_blob(nonce)
+        print(param)
+
+        res = r.post(self.url + path, data=json.dumps(param))
+        
 
         try:
             response = res.json()
         except ValueError:
-            response = res.status
+            print(res)
 
-        return response
+        return 0
     
     def create_post(self, post):
         """Create a new post"""

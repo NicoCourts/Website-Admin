@@ -17,9 +17,9 @@ class Crypto:
         Parameters:
             blob: A binary blob that is to be signed.
         Returns:
-            A hex-encoded string representation of the signature.
+            A base64-encoded string representation of the signature.
         """
         blobhash = rsa.compute_hash(blob, 'SHA-512')
-        print(blobhash.hex())
+        #print(blobhash.hex())
         sig = rsa.sign_hash(blobhash, self.privkey, 'SHA-512')
         return str(b64.standard_b64encode(sig), 'utf-8')
