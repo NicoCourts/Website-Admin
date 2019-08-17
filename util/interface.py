@@ -30,42 +30,24 @@ class APICaller:
 
     def get_posts(self, path="posts/all/"):
         """Fetch a JSON object containing the current posts"""
-        #This is how I'll do it once I get auth set up
-        #res = self.post_object(None, path="posts/all/")
-        param = {}
-        nonce = self.get_nonce()
-        param['Payload'] = ''
-        param['Nonce'] = b64.b64encode(nonce).decode('ASCII')
-        param['Sig'] = self.crypto.sign_blob(nonce)
-        print(param)
-
-        res = r.post(self.url + path, data=json.dumps(param))
-        
-
-        try:
-            response = res.json()
-        except ValueError:
-            print(res)
-
-        return 0
+        return self.post_object('', path).json()
     
     def create_post(self, post):
         """Create a new post"""
         return self.post_object(post, path="post/")
+    
+    def toggle_visible(self, postid):
+        """Toggle the visibility of a post."""
+        return self.post_object('', 'post/toggle/' + postid)
 
     def post_object(self, obj, path=""):
         """Creates a POST request to the API with the provided JSON object.
 
         Client can include an (optional) an API route to post to."""
         signed_obj = self.sign_obj(obj)
-        res = r.post(self.url + path, json=signed_obj)
+        res = r.post(self.url + path, data=json.dumps(signed_obj))
 
-        try:
-            response = res.json()
-        except ValueError:
-            response = res.status
-
-        return  response
+        return res
 
     def upload_img(self, filename):
         """Upload an image to the API"""
@@ -90,17 +72,17 @@ class APICaller:
         return  response
 
     def sign_obj(self, obj):
-        """Sign the object (with a nonce) and return a bytearray for the query"""
+        """Sign the object (with a nonce) and return a dict for the query"""
         nonce = self.get_nonce()
-        if obj is None:
+        if obj is '':
             sig = self.crypto.sign_blob(nonce)
             json_obj = json.dumps([]).encode('utf-8')
         else:
             json_obj = json.dumps(obj).encode('utf-8')
             sig = self.crypto.sign_blob(nonce + json_obj)
 
-        signed_obj = {"Payload": b64.standard_b64encode(json_obj),
-                      "Nonce": str(b64.standard_b64encode(nonce), 'utf-8'),
+        signed_obj = {"Payload": b64.standard_b64encode(json_obj).decode('ASCII'),
+                      "Nonce": b64.standard_b64encode(nonce).decode('ASCII'),
                       "Sig": sig}
 
         return signed_obj

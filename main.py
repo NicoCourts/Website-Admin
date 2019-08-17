@@ -1,6 +1,7 @@
 import threading
 import webview
 import sys
+import random
 
 from util.interface import APICaller
 
@@ -16,12 +17,20 @@ class Api:
     def add_window(self, window):
         self.windows.append(window)
 
-    def close_program(self, trash):
+    def close_program(self, params):
         for window in self.windows:
             window.destroy()
         sys.exit(0)
-    def get_posts(self, trash):
-        print(self.api_caller.get_posts())
+
+    def get_posts(self, params):
+        return self.api_caller.get_posts()
+
+    def reset(self, params):
+        return 0
+
+    def toggle_visible(self, params):
+        self.api_caller.toggle_visible(params)
+
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@
 }
 body {
 	background-image:url(what-the-hex.png);
+	font-family: Cantarell;
 }
 div#content-wrapper{
 	padding: 0px;
@@ -157,7 +158,14 @@ div#buttons{
 }
 button {
 	font-size: 16pt;
-	padding: 20px;
+	padding: 5px;
+	background-color: #FFC36F;
+	margin-left: auto;
+	margin-right: auto;
+	color: black;
+}
+#close, .edit-post, .toggle{
+	font-size: 12pt;
 }
 div.clickable {
 	font: Arial;
@@ -176,8 +184,9 @@ div.clickInner {
 	cursor: pointer;
 }
 
-div#close {
+div#closediv {
 	text-align: right;
+	
 }
 div#content {
 	display: flex;
@@ -186,4 +195,17 @@ div#content {
 }
 span.hover {
 	cursor: pointer;
+	background-color: #FFC36F;
+	padding: 5px;
+	box-shadow: #000 1px 1px 5px 1px;
+
+}
+table {
+	width: 100%;
+}
+th {
+	text-align: left;
+}
+td {
+	word-break:break-all;
 }

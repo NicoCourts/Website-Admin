@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="jquery-ui.min.css">
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 </head>
 <body>
     <div id="content">
-        <div onClick="end()" id="close"><span class="hover">Close</span></div>
-        <div id='buttons'>
-            <center>
-                <h2>Blog Administration</h2>
-                <div onClick="print()" class='clickable'>
-                    <div class="clickInner">View Posts</div>
-                </div><br />
-                <div onClick="get_posts()" class='clickable'>
-                    <div class="clickInner">get posts</div>
-                </div>
-            </center>
-        </div>
+        <div id="closediv"><button id="close">Close</button></div>
+        <p><button id='get-posts'>Get Posts</button></p>
+        <div id='posts'><table id='post-table'><tr><th>Title</th><th>Date</th><th>Visible</th><th>Toggle Visibility</th><th>Edit Post</th></tr></table></div>
     </div>
 
     <script>
-    function end() {
-        pywebview.api.close_program();
-    }
-    function get_posts() {
-        pywebview.api.get_posts();
-    }
+        $('#get-posts').on("click", function() {
+            $('#get-posts').html("Refresh Post List");
+            pywebview.api.get_posts().then(function(posts) {
+                $("#post-table").html("<tr><th>Title</th><th>Date</th><th>Visible</th><th>Toggle Visibility</th><th>Edit Post</th></tr>");
+                posts.forEach(function(post) {
+                    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    var newrow = $('<tr>');
+                    var d = new Date(post['date']);
+                    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    options.timeZone = 'UTC';
+                    options.timeZoneName = 'short';
+                    var d2 = new Intl.DateTimeFormat('en-US', options).format(d);
+                    
+                    newrow.append($('<td>').html("<a target='_blank' href='https://nicocourts.com/blog/" + post['urltitle'] + "'>" + post['title'] + "</a>"));
+                    newrow.append($('<td>').html(d.toLocaleString('en-US',{ timeZone: 'UTC' })));
+                    newrow.append($('<td>').html(post['visible'].toString()))
+                    newrow.append($('<td>').html('<button class="toggle" id="' + post['_id'] +'">Toggle</button>'));
+                    newrow.append($('<td>').html('<button class="edit-post">Edit Post</button>'));
+                    
+                    $("#post-table").append(newrow);
+                });
+                $(".toggle").on("click", function() {
+                    pywebview.api.toggle_visible($(this).attr('id')).then(function() {
+                        $('#get-posts').click();
+                        pywebview.api.reset();
+                    }); 
+                });
+            });
+            pywebview.api.reset();
+        });
+
+        $('#close').on("click", function() {
+            pywebview.api.close_program();
+        });
     </script>
 </body>
 </html>
