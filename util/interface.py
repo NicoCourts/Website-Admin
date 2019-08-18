@@ -34,7 +34,11 @@ class APICaller:
     
     def create_post(self, post):
         """Create a new post"""
-        return self.post_object(post, path="post/")
+        return self.post_object(post, "post/")
+
+    def update_post(self, post, postid):
+        """Update a current post"""
+        return self.post_object(post, "post/" + postid)
     
     def toggle_visible(self, postid):
         """Toggle the visibility of a post."""

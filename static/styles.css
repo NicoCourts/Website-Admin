@@ -7,6 +7,7 @@ body {
 	font-family: Cantarell;
 }
 div#content-wrapper{
+	background-color: white;
 	padding: 0px;
 	border-radius:2px;
 	max-width:900px;
@@ -164,7 +165,7 @@ button {
 	margin-right: auto;
 	color: black;
 }
-#close, .edit-post, .toggle{
+#close, #go-home, .edit-post, .toggle{
 	font-size: 12pt;
 }
 div.clickable {
@@ -208,4 +209,11 @@ th {
 }
 td {
 	word-break:break-all;
+}
+textarea {
+	height: 500px;
+	background-color: #fefefe;
+}
+input {
+	background-color: #fefefe;
 }

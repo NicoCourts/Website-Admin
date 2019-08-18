@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="jquery-ui.min.css">
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.min.js"></script>
+    <link rel="stylesheet" width='100' type="text/css" href="styles.css" media="screen" />
+</head>
+<body>
+    <div id="content">
+        <div id="closediv"><button id="go-home">Return to Main Page</button></div>
+        <center><h2>Composing Post</h2></center>
+        <p>Post Title: <input type='text' id='title-field' value='There'/></p>
+        <p>Post Body:</p>
+        <textarea id='post-body'>This is the body</textarea>
+        <center>
+            <button id='preview'>Preview Post</button>
+            <button id='save-post'>Save Post</button>
+        </center>
+    </div>
+
+    <script>
+        var new_post = true;
+        var postid = 3041364122;
+        $("#go-home").on("click", function() {pywebview.api.go_to('main');});
+        $("#preview").on("click", function(){
+            var title = $('#title-field').val();
+            var date = "Monday, 25 January 2019 3:43pm";
+            var body = $('#post-body').val();
+            pywebview.api.preview([title, date, body])
+            pywebview.api.reset()
+        });
+        $('#save-post').on("click", function() {
+            params = [new_post, postid, $('#title-field').val(), $('#post-body').val()]
+            pywebview.api.submit(params).then(function() {
+                alert("Post Updated!");
+                pywebview.api.go_to('main');
+            });
+        });
+    </script>
+</body>
+</html>

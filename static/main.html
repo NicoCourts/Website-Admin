@@ -10,7 +10,8 @@
 <body>
     <div id="content">
         <div id="closediv"><button id="close">Close</button></div>
-        <p><button id='get-posts'>Get Posts</button></p>
+        <center><h2>Post Administration</h2></center>
+        <p><button id='get-posts'>Get Posts</button><button id='new-post'>New Post</button></p>
         <div id='posts'><table id='post-table'><tr><th>Title</th><th>Date</th><th>Visible</th><th>Toggle Visibility</th><th>Edit Post</th></tr></table></div>
     </div>
 
@@ -32,7 +33,7 @@
                     newrow.append($('<td>').html(d.toLocaleString('en-US',{ timeZone: 'UTC' })));
                     newrow.append($('<td>').html(post['visible'].toString()))
                     newrow.append($('<td>').html('<button class="toggle" id="' + post['_id'] +'">Toggle</button>'));
-                    newrow.append($('<td>').html('<button class="edit-post">Edit Post</button>'));
+                    newrow.append($('<td>').html('<button class="edit-post" id="P' + post['_id'] + '">Edit Post</button>'));
                     
                     $("#post-table").append(newrow);
                 });
@@ -42,9 +43,16 @@
                         pywebview.api.reset();
                     }); 
                 });
+                $('.edit-post').on("click", function() {
+                    pywebview.api.edit_post($(this).attr('id'))
+                })
             });
             pywebview.api.reset();
         });
+
+        $('#new-post').on("click", function() {
+            pywebview.api.preview(['Title', 'Monday', 'This is the body of the post. I love you.<br /><br /> So much.'])
+        })
 
         $('#close').on("click", function() {
             pywebview.api.close_program();
