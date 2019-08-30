@@ -11,9 +11,9 @@
     <div id="content">
         <div id="closediv"><button id="go-home">Return to Main Page</button></div>
         <center><h2>Composing Post</h2></center>
-        <p>Post Title: <input type='text' id='title-field' value='There'/></p>
+        <p>Post Title: <input type='text' id='title-field' value=''/></p>
         <p>Post Body:</p>
-        <textarea id='post-body'>This is the body</textarea>
+        <textarea id='post-body'></textarea>
         <center>
             <button id='preview'>Preview Post</button>
             <button id='save-post'>Save Post</button>
@@ -22,7 +22,7 @@
 
     <script>
         var new_post = true;
-        var postid = 3041364122;
+        var postid = 0;
         $("#go-home").on("click", function() {pywebview.api.go_to('main');});
         $("#preview").on("click", function(){
             var title = $('#title-field').val();

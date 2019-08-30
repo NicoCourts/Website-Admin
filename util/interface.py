@@ -38,7 +38,7 @@ class APICaller:
 
     def update_post(self, post, postid):
         """Update a current post"""
-        return self.post_object(post, "post/" + postid)
+        return self.post_object(post, "post/" + str(postid))
     
     def toggle_visible(self, postid):
         """Toggle the visibility of a post."""
@@ -81,11 +81,13 @@ class APICaller:
         if obj is '':
             sig = self.crypto.sign_blob(nonce)
             json_obj = json.dumps([]).encode('utf-8')
+            payload = b64.standard_b64encode(b'').decode('ASCII')
         else:
             json_obj = json.dumps(obj).encode('utf-8')
             sig = self.crypto.sign_blob(nonce + json_obj)
+            payload = b64.standard_b64encode(json_obj).decode('ASCII')
 
-        signed_obj = {"Payload": b64.standard_b64encode(json_obj).decode('ASCII'),
+        signed_obj = {"Payload": payload,
                       "Nonce": b64.standard_b64encode(nonce).decode('ASCII'),
                       "Sig": sig}
 

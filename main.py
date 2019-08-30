@@ -1,8 +1,10 @@
 """ Main entry point for the program"""
+import html
 import os
 import sys
 import markdown
 import webview
+import json
 
 from jinja2 import Template
 from util.interface import APICaller
@@ -48,9 +50,23 @@ class Api:
             template = Template(f.read())
         html = template.render(
             title=post['title'],
-            body=post['body'],
-            new_post='true',
+            body=json.loads(post['markdown']),
+            new_post='false',
             postid=post['_id']
+        )
+        with open('static/post-edit-live.html', 'w') as f:
+            f.write(html)
+        self.go_to('post-edit-live')
+
+    def edit_new_post(self, params):
+        """Create a new post and open it for editing"""
+        with open('static/post-edit.html', 'r') as f:
+            template = Template(f.read())
+        html = template.render(
+            title='',
+            body='',
+            new_post='true',
+            postid=0
         )
         with open('static/post-edit-live.html', 'w') as f:
             f.write(html)
@@ -73,7 +89,7 @@ class Api:
     def submit(self, params):
         """Submits a post to the API"""
         # Determine whether this is an update to an existing post
-        post = {'title': params[2], 'markdown': params[3], 'body': markitdown(params[3])}
+        post = {'title': params[2], 'markdown': json.dumps(params[3]), 'body': json.dumps(markitdown(params[3]))}
         if params[0]:
             #new post
             self.api_caller.create_post(post)
