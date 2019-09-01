@@ -48,9 +48,13 @@ class Api:
         post = self.get_post(postid)
         with open('static/post-edit.html', 'r') as f:
             template = Template(f.read())
+        if post['markdown'] == '':
+            markd = post['body']
+        else:
+            markd = json.loads(post['markdown'])
         html = template.render(
             title=post['title'],
-            body=json.loads(post['markdown']),
+            body=markd,
             new_post='false',
             postid=post['_id']
         )
