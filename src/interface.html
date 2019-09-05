@@ -1,0 +1,115 @@
+<html>Interface<script>
+
+// Handle the interface to the API
+const {ipcRenderer} = require('electron')
+const {BrowserWindow, getGlobal} = require('electron').remote
+const baseURL = getGlobal('baseURL')
+const axios = require('axios')
+const fs = require('fs')
+
+// Gets all posts in database
+ipcRenderer.on('get-all-posts',(event) => {
+    post_stuff(
+        baseURL + 'posts/all/',
+        '',
+        function (res) {
+            getGlobal('windows')['main'].webContents.send(
+                'got-all-posts',
+                res.data,
+            )
+        },
+    )
+})
+
+// Toggles visibility of a post
+ipcRenderer.on('toggle-visible',(event, postID) => {
+    post_stuff(
+        baseURL + 'post/toggle/' + postID,
+        '',
+        function (res) {
+            getGlobal('windows')['interface'].webContents.send('get-all-posts')
+        },
+    )
+})
+
+// Updates/creates a post
+ipcRenderer.on('insert-post',(event, postURL, postTitle, 
+    postMarkdown, postBody, returnWindow) => {
+    post_stuff(
+        postURL,
+        JSON.stringify({
+            'title':    postTitle,
+            'markdown': postMarkdown,
+            'body':     postBody,
+        }),
+        function (response) {
+            getGlobal('windows')['editor'].webContents.send(
+                'updated-post',
+                response.status
+            )
+        },
+    )
+})
+
+// Just read the image list
+ipcRenderer.on('get-image-list', (event) => {
+    axios.get(baseURL + 'images/').then((res) => {
+        console.log(res)
+        list = res.data
+        getGlobal('windows')['image'].webContents.send('got-images', list)
+    })
+})
+
+// Uploads an image
+ipcRenderer.on('insert-image',(event, imagePath, fileName, fileExt) => {
+    fs.readFile(imagePath + fileName + "." + fileExt, (err, data) => {
+        if (typeof err !== 'undefined') {console.log(err)}
+        const img64 = data.toString('base64')
+        axios.get(baseURL + 'nonce/').then((res) => {
+            const nonce64 = res.data.value
+            const blob = Buffer.from(nonce64, 'base64')
+            var signature = ipcRenderer.sendSync(
+                'sign-blob',
+                blob
+            )
+
+            // We've got our nonce and signed our data. Do POST request.
+            axios.post(baseURL + 'upload/', {
+                    'Nonce': nonce64,
+                    'Filename': fileName + '.' + fileExt,
+                    'Sig': Buffer.from(signature).toString('base64'),
+                    'Img': img64,
+                }
+            ).then((res) => {
+                console.log(res)
+            })
+        })
+    })
+})
+
+// Generic POST method
+function post_stuff(postURL, stuff, callback) {
+    axios.get(baseURL + 'nonce/').then((res) => {
+        const nonce64 = res.data.value
+        const buf1 = Buffer.from(nonce64, 'base64')
+        const buf2 = Buffer.from(stuff)
+        const blob = Buffer.concat([buf1, buf2])
+        var signature = ipcRenderer.sendSync(
+            'sign-blob',
+            blob
+        )
+
+        // We've got our nonce and signed our data. Do POST request.
+        axios.post(postURL, {
+                'Payload': Buffer.from(stuff).toString('base64'),
+                'Nonce': nonce64, 
+                'Sig': Buffer.from(signature).toString('base64'),
+            }
+        ).then((r) => {
+            callback(r)
+        })
+        
+    })
+}
+
+</script></html>

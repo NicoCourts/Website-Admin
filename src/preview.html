@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="hilite-style.css" media="screen" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/paraiso-light.min.css">
+    </head>
+    <body>
+        <div id='dragbar'><div>:)</div><div style="color:white;"><strong>Post Preview</strong></div> <div id='closediv'><strong>&times;</strong></div></div>
+        <div id="content-wrapper">
+            <div id="content">
+                <div id="postWrapper">
+                    <div class="flexbox">
+                        <div><h1><span id='titleSpan'></span></h1></div>
+                        <div id='dateSpan'>Saturday, August 31, 2019, 4:20 PM</div>
+                    </div>
+                    <hr />
+                    <div class="blogReturn">
+                        <a href="javascript:void(0)">⇐ Return to blog listing</a>
+                    </div>
+                    <div id="postContent"></div>
+                    <div class="blogReturn"><a href="javascript:void(0)">⇐ Return to blog listing</a></div>
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <script>
+            const {ipcRenderer} = require('electron')
+            const {getGlobal} = require('electron').remote
+            ipcRenderer.on('load-post-data', (event, postTitle, postBody) => {
+                postBody = postBody.replace('<pre>', '<div class="prediv"><pre>')
+                postBody = postBody.replace('</pre>', '</pre></div>')
+                document.getElementById('titleSpan').innerHTML = postTitle
+                document.getElementById('postContent').innerHTML = postBody
+            })
+            document.getElementById('closediv').addEventListener('click', () => {
+                getGlobal('windows')['preview'].hide()
+            })
+        </script>
+    </body>
+</html>

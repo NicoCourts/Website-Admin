@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+</head>
+<body>
+    <div id='dragbar'><div>:)</div><div style="color:white;"><strong>Post Administration</strong></div> <div id='closediv'><strong>&times;</strong></div></div>
+    <div id="content">
+        <p><button id='get-posts'>Refresh Posts</button><button id='new-post'>New Post</button></p>
+        <div id='posts'><table id='post-table'><tr><th>Title</th><th>Date</th><th>Visible</th><th>Edit Post</th></tr></table></div>
+    </div>
+  <script>
+    const {ipcRenderer} = require('electron')
+    const {BrowserWindow, getGlobal} = require('electron').remote
+    let posts;
+    ipcRenderer.on("got-all-posts", (event, res) => {
+      document.getElementById('posts').innerHTML = "<table id='post-table'><tr><th>Title</th><th>Date</th><th>Visible</th><th>Edit Post</th></tr></table>"
+      var table = document.getElementById('post-table')
+      table.insertRow();
+      posts = {}
+      res.reverse().forEach((element) => {
+        posts[element._id] = element
+        var d = new Date(Date.parse(element.date))
+        var options = { 
+          weekday: 'long',
+          year:    'numeric',
+          month:   'long',
+          day:     'numeric',
+          hour:    'numeric',
+          minute:  'numeric'
+        }
+        var newrow = table.insertRow();
+        newrow.insertCell(0).innerHTML = element.title
+        newrow.insertCell(1).innerHTML = d.toLocaleString("en-US", options)
+        newrow.insertCell(2).innerHTML = `<a href='javascript:toggle_post(${element._id})'>${element.visible}</a>`
+        newrow.insertCell(3).innerHTML = `<a href='javascript:edit_post(${element._id})'>Edit Post</a>`
+      })
+    })
+    document.getElementById('closediv').addEventListener('click', () => {
+      getGlobal('windows')['main'].close()
+    })
+    document.getElementById('get-posts').addEventListener('click', () => {
+      getGlobal('windows')['interface'].webContents.send('get-all-posts')
+    })
+    document.getElementById('new-post').addEventListener('click', () => {
+      getGlobal('windows')['interface'].webContents.send('new-post')
+    })
+
+    function toggle_post(postID) {
+      getGlobal('windows')['interface'].webContents.send('toggle-visible', postID)
+    }
+    function edit_post(postID) {
+      p = posts[postID]
+      getGlobal('windows')['editor'].webContents.send('edit-post', p._id, p.title, p.markdown)
+      getGlobal('windows')['editor'].show()
+    }
+  </script>
+  </body>
+</html>

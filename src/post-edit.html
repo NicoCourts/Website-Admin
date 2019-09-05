@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="external/jquery/jquery.js"></script>
+    <link rel="stylesheet" width='100' type="text/css" href="styles.css" media="screen" />
+</head>
+<body>
+    <div id='dragbar'><div>:)</div><div style="color:white;"><strong>Compose Post</strong></div> <div id='closediv'><strong>&times;</strong></div></div>
+    <div id="content">
+        <button id='images'>Manage Images</button>
+        <p>Post Title: <input type='text' id='title-field'/></p>
+        <p>Post Body:</p>
+        <textarea id='post-body' onkeyup="update_post(this.value)" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">
+            </textarea>
+        <center>
+            <button id='preview'>Preview Post</button>
+            <button id='save-post'>Save Post</button>
+        </center>
+    </div>
+
+    <script>
+        const {ipcRenderer, dialog} = require('electron')
+        const {getGlobal} = require('electron').remote
+        const baseURL = getGlobal('baseURL')
+        const md = require('markdown-it')({
+            html: true,
+            linkify: true,
+            typographer: true,
+            highlight: function(str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(lang, str).value;
+                    } catch (__) {}
+                }
+            },
+        })
+        const mk = require('@iktakahiro/markdown-it-katex')
+        md.use(mk)
+        const hljs = require('highlight.js')
+
+        // Keep track of whether this is a new post
+        var postID = ''
+
+        // catch incoming info
+        ipcRenderer.on('edit-post', (event, postid, postTitle, postMarkdown) => {
+            document.getElementById('title-field').value = postTitle
+            document.getElementById('post-body').innerHTML = JSON.parse(postMarkdown)
+            postID = postid
+        })
+        document.getElementById('closediv').addEventListener('click', () => {
+            getGlobal('windows')['editor'].hide()
+            getGlobal('windows')['preview'].hide()
+            document.getElementById('title-field').value = ''
+            document.getElementById('post-body').value = ''
+            postID = ''
+        })
+        ipcRenderer.on('new-post', (event) => {
+            document.getElementById('title-field').value = ''
+            document.getElementById('post-body').value = ''
+            postID = ''
+            getGlobal('windows')['editor'].show()
+        })
+        document.getElementById('preview').addEventListener('click', () => {
+            getGlobal('windows')['preview'].show()
+            update_post()
+        })
+        function update_post(markdown) {
+            if (typeof markdown == 'undefined') {markdown = '*Type plz*'}
+            var html = md.render(markdown)
+            getGlobal('windows')['preview'].webContents.send(
+                'load-post-data', 
+                document.getElementById('title-field').value,
+                html,
+            )
+        }
+        document.getElementById('save-post').addEventListener('click', () => {
+            getGlobal('windows')['interface'].webContents.send(
+                'insert-post',
+                baseURL + 'post/' + postID,
+                document.getElementById('title-field').value.replace('"',''),
+                JSON.stringify(document.getElementById('post-body').value),
+                JSON.stringify(md.render(document.getElementById('post-body').value)),
+                'editor',
+            )
+        })
+        ipcRenderer.on('updated-post', (event, res) => {
+            if (res == '200') {
+                ipcRenderer.send('open-dialog', 'Post Created', "The post was successfully submitted! :)")
+                document.getElementById('closediv').click()
+            } else {
+                console.log('Failed Request Code: ', res)
+            }
+        })
+        ipcRenderer.on('insert-image', (event, url) => {
+            document.getElementById('post-body').value += `\n<div class='centerdiv'><img class='center'src='${url}'></div>\n`
+        })
+        document.getElementById('images').addEventListener('click', () => {
+            getGlobal('windows')['image'].show()
+        })
+    </script>
+</body>
+</html>

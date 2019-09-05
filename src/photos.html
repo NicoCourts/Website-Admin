@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+</head>
+<body>
+    <div id='dragbar'><div>:)</div><div style="color:white;"><strong>Image Administration</strong></div> <div id='closediv'><strong>&times;</strong></div></div>
+    <div id="content">
+        <p><button id='get-images'>Refresh Images</button></p>
+        <div id='images'></div>
+    </div>
+</body>
+<script>
+    var images = {}
+    const {ipcRenderer} = require('electron')
+    const {getGlobal} = require('electron').remote
+
+    ipcRenderer.on('got-images', (event, imageList) => {
+        const imgDiv = document.getElementById('images')
+
+        // Clear out the div
+        while (imgDiv.hasChildNodes()) {
+            imgDiv.removeChild(imgDiv.lastChild);
+        }
+
+        // Repopulate
+        imageList.forEach((img) => {
+            // New DOM elements
+            images[img.date] = img
+            var newImg = document.createElement('img')
+            newImg.src = img.url
+            newImg.alt = img.alttext
+            var newDiv = document.createElement('div')
+            newDiv.className = 'image'
+            newDiv.id = img.date 
+            newDiv.appendChild(newImg)
+            imgDiv.appendChild(newDiv)
+        })
+
+        // Set event listeners
+        Array.from(document.getElementsByClassName('image')).forEach((elem) => {
+            elem.addEventListener('click', () => {
+                getGlobal('windows')['editor'].webContents.send('insert-image', images[elem.id].url)
+            })
+        })
+    })
+
+    document.getElementById('get-images').addEventListener('click', () => {
+        getGlobal('windows')['interface'].webContents.send('get-image-list')
+    })
+    document.getElementById('closediv').addEventListener('click', () => {
+        getGlobal('windows')['image'].hide()
+    })
+</script></html>
