@@ -51,6 +51,7 @@
         document.getElementById('closediv').addEventListener('click', () => {
             getGlobal('windows')['editor'].hide()
             getGlobal('windows')['preview'].hide()
+            getGlobal('windows')['image'].hide()
             document.getElementById('title-field').value = ''
             document.getElementById('post-body').value = ''
             postID = ''

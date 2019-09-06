@@ -16,26 +16,27 @@
     const {BrowserWindow, getGlobal} = require('electron').remote
     let posts;
     ipcRenderer.on("got-all-posts", (event, res) => {
-      document.getElementById('posts').innerHTML = "<table id='post-table'><tr><th>Title</th><th>Date</th><th>Visible</th><th>Edit Post</th></tr></table>"
+      document.getElementById('posts').innerHTML = "<table id='post-table'><tr><th>Title</th><th>Date</th><th>Last Updated</th><th>Visible</th></tr></table>"
       var table = document.getElementById('post-table')
       table.insertRow();
       posts = {}
       res.reverse().forEach((element) => {
         posts[element._id] = element
         var d = new Date(Date.parse(element.date))
+        var dd = new Date(Date.parse(element.updated))
         var options = { 
           weekday: 'long',
           year:    'numeric',
-          month:   'long',
+          month:   'short',
           day:     'numeric',
           hour:    'numeric',
           minute:  'numeric'
         }
         var newrow = table.insertRow();
-        newrow.insertCell(0).innerHTML = element.title
+        newrow.insertCell(0).innerHTML = `<a href='javascript:edit_post(${element._id})'>${element.title}</a>`
         newrow.insertCell(1).innerHTML = d.toLocaleString("en-US", options)
-        newrow.insertCell(2).innerHTML = `<a href='javascript:toggle_post(${element._id})'>${element.visible}</a>`
-        newrow.insertCell(3).innerHTML = `<a href='javascript:edit_post(${element._id})'>Edit Post</a>`
+        newrow.insertCell(2).innerHTML = dd.toLocaleString("en-US", options)
+        newrow.insertCell(3).innerHTML = `<a href='javascript:toggle_post(${element._id})'>${element.visible}</a>`
       })
     })
     document.getElementById('closediv').addEventListener('click', () => {
