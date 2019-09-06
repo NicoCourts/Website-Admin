@@ -45,7 +45,7 @@
       getGlobal('windows')['interface'].webContents.send('get-all-posts')
     })
     document.getElementById('new-post').addEventListener('click', () => {
-      getGlobal('windows')['interface'].webContents.send('new-post')
+      getGlobal('windows')['editor'].webContents.send('new-post')
     })
 
     function toggle_post(postID) {
