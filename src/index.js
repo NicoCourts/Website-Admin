@@ -141,6 +141,16 @@ ipcMain.on('open-dialog', (_event, head, body) => {
   }
   dialog.showMessageBox(options)
 })
+ipcMain.on('open-image-dialog', (event) => {
+  dialog.showOpenDialog({
+    properties: ['openFile'],
+    message: "Choose an image to upload."
+  }, (files) => {
+    if (files) {
+      event.sender.send('selected-directory', files)
+    }
+  })
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

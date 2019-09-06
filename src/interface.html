@@ -62,7 +62,7 @@ ipcRenderer.on('get-image-list', (event) => {
 
 // Uploads an image
 ipcRenderer.on('insert-image',(event, imagePath, fileName, fileExt) => {
-    fs.readFile(imagePath + fileName + "." + fileExt, (err, data) => {
+    fs.readFile(imagePath + '/' + fileName + fileExt, (err, data) => {
         if (typeof err !== 'undefined') {console.log(err)}
         const img64 = data.toString('base64')
         axios.get(baseURL + 'nonce/').then((res) => {
@@ -76,12 +76,15 @@ ipcRenderer.on('insert-image',(event, imagePath, fileName, fileExt) => {
             // We've got our nonce and signed our data. Do POST request.
             axios.post(baseURL + 'upload/', {
                     'Nonce': nonce64,
-                    'Filename': fileName + '.' + fileExt,
+                    'Filename': fileName + fileExt,
                     'Sig': Buffer.from(signature).toString('base64'),
                     'Img': img64,
                 }
             ).then((res) => {
-                console.log(res)
+                ipcRenderer.send("send-dialog", "Image Upload Successful", "Congrats! Your thing is there!")
+                getGlobal('windows')['interface'].webContents.send('get-image-list')
+            }).error((error) => {
+                console.log(error)
             })
         })
     })

@@ -75,12 +75,16 @@
             )
         }
         document.getElementById('save-post').addEventListener('click', () => {
+            var markdown = document.getElementById('post-body').value
+            var html = md.render(markdown)
+            html = html.replace('<pre>', '<div class="prediv"><pre>')
+            html = html.replace('</pre>', '</pre></div>')
             getGlobal('windows')['interface'].webContents.send(
                 'insert-post',
                 baseURL + 'post/' + postID,
                 document.getElementById('title-field').value.replace('"',''),
-                JSON.stringify(document.getElementById('post-body').value),
-                JSON.stringify(md.render(document.getElementById('post-body').value)),
+                JSON.stringify(markdown),
+                JSON.stringify(html),
                 'editor',
             )
         })

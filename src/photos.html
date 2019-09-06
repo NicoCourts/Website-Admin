@@ -8,7 +8,7 @@
 <body>
     <div id='dragbar'><div>:)</div><div style="color:white;"><strong>Image Administration</strong></div> <div id='closediv'><strong>&times;</strong></div></div>
     <div id="content">
-        <p><button id='get-images'>Refresh Images</button></p>
+        <p><button id='get-images'>Refresh Images</button><button id='upload-image'>Upload New Image</button></p>
         <div id='images'></div>
     </div>
 </body>
@@ -16,6 +16,7 @@
     var images = {}
     const {ipcRenderer} = require('electron')
     const {getGlobal} = require('electron').remote
+    const p = require('path')
 
     ipcRenderer.on('got-images', (event, imageList) => {
         const imgDiv = document.getElementById('images')
@@ -52,5 +53,15 @@
     })
     document.getElementById('closediv').addEventListener('click', () => {
         getGlobal('windows')['image'].hide()
+    })
+    document.getElementById('upload-image').addEventListener('click', () => {
+        ipcRenderer.send('open-image-dialog')
+    })
+    ipcRenderer.on('selected-directory', (event, path) => {
+        path = path[0]
+        var thisPath = p.dirname(path)
+        var thisExt = p.extname(path)
+        var thisName = p.basename(path, thisExt)
+        getGlobal('windows')['interface'].webContents.send('insert-image', thisPath, thisName, thisExt)
     })
 </script></html>
