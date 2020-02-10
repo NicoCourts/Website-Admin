@@ -1,7 +1,10 @@
 # NicoCourts.com Administrator Interface
 
-Originally I was trying to do the adminstrator interface all in Angular, but it ends up that TypeScript is really just not suited to the kind of computing I wanted to do.
+This interface for composing blogs went through several iterations before arriving at this final form. I have tried writing this using many different languages before realizing that Electron was really the right framework to use. I can use my CSS skills to control the appearance and Typescript to control all the interactions.
 
-Thus I went to the old standby -- Python. I found a great package `pywebview` that is a great wrapper for a GTK+ webview window. That allows me to design the interface in HTML/CSS/Javascript while being able to do all the computation behind the scenes in Python.
+I am considering this project done at this point because it "just works". At some point in the future I will want to revisit the design to make it slightly less clunky.
 
-At the moment the interface is pretty barren. I have written some methods to interact with the API, so now I just need to get the UI where I want it.
+## To-dos
+1. Incorporate the different windows into a single window so things don't feel as cluttered.
+1. Polish the flow for common tasks (make composition a priority).
+1. Squash bugs as they arise.
