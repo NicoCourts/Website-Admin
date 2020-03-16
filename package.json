@@ -46,20 +46,22 @@
   },
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^3.1.0",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "babel-eslint": "^10.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "highlight.js": "^9.15.10",
-    "katex": "^0.11.0",
+    "highlight.js": "^9.18.1",
+    "katex": "^0.11.1",
     "markdown-it": "^9.1.0",
-    "node-rsa": "^1.0.5",
-    "showdown": "^1.9.0",
+    "node-rsa": "^1.0.7",
+    "npm": "^6.13.7",
+    "showdown": "^1.9.1",
     "showdown-katex": "^0.6.0",
-    "typescript": "^3.6.2",
-    "xmldom": "^0.1.27"
+    "typescript": "^3.7.5",
+    "xmldom": "^0.1.31",
+    "yarn-or-npm": "^2.0.4"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.44",
@@ -67,10 +69,10 @@
     "@electron-forge/maker-rpm": "6.0.0-beta.44",
     "@electron-forge/maker-squirrel": "6.0.0-beta.44",
     "@electron-forge/maker-zip": "6.0.0-beta.44",
-    "@typescript-eslint/eslint-plugin": "^2.1.0",
-    "@typescript-eslint/parser": "^2.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
     "electron": "6.0.7",
-    "eslint": "^6.3.0",
+    "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0"
   }
 }
