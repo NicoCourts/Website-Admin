@@ -56,11 +56,12 @@
     "katex": "^0.11.1",
     "markdown-it": "^9.1.0",
     "node-rsa": "^1.0.7",
-    "npm": "^6.13.7",
+    "npm": "^6.14.4",
     "showdown": "^1.9.1",
     "showdown-katex": "^0.6.0",
     "typescript": "^3.7.5",
     "xmldom": "^0.1.31",
+    "yarn": "^1.22.4",
     "yarn-or-npm": "^2.0.4"
   },
   "devDependencies": {
