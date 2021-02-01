@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^3.1.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
